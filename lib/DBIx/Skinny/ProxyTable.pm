@@ -49,7 +49,7 @@ sub _camelize {
     join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
 }
 
-sub create_table {
+sub copy_table {
     my ($self, $from, $to) = @_;
     my $dbd = $self->skinny->dbd && ref $self->skinny->dbd;
     if ( $dbd && $dbd =~ /^DBIx::Skinny::DBD::(.+)$/ ) {
@@ -103,11 +103,11 @@ DBIx::Skinny::ProxyTable -
   package main;
 
   Proj::DB->proxy_table->set(access_log => "access_log_200901");
-  Proj::DB->proxy_table->create_table(access_log => "access_log_200901");
+  Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
   my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
   $rule->table_name; #=> "access_log_200901"
   if ( !$rule->is_table_exist ) {
-    $rule->create_table;
+    $rule->copy_table;
   }
 
   my $iter = $rule->search({ foo => 'bar' });

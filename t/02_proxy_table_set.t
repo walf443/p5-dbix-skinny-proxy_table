@@ -10,7 +10,7 @@ ok($skinny->can('proxy_table'), 'proxy_table can call');
 isa_ok($skinny->proxy_table, 'DBIx::Skinny::ProxyTable');
 
 my $table = "access_log_200901";
-$skinny->proxy_table->create_table('access_log' => $table);
+$skinny->proxy_table->copy_table('access_log' => $table);
 
 dies_ok {
     $skinny->search($table, {});
