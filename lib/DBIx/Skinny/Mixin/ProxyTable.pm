@@ -1,6 +1,7 @@
 package DBIx::Skinny::Mixin::ProxyTable;
 use strict;
 use warnings;
+use DBIx::Skinny::ProxyTable;
 
 sub register_method {
     +{

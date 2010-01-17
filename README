@@ -2,7 +2,32 @@ NAME
     DBIx::Skinny::ProxyTable -
 
 SYNOPSIS
-      use DBIx::Skinny::ProxyTable;
+      package Proj::DB;
+      use DBIx::Skinny;
+      use DBIx::Skinny::Mixin modules => [qw(ProxyTable)];
+
+      package Proj::DB::Schema;
+      use DBIx::Skinny::Schema;
+      use DBIx::Skinny::Schema::ProxyRule;
+
+      install_table 'access_log' => shcema {
+        proxy_rule 'strftime', 'access_log_%Y%m';
+
+        pk 'id';
+        columns qw/id/;
+      };
+
+      package main;
+
+      Proj::DB->proxy_table->set(access_log => "access_log_200901");
+      Proj::DB->proxy_table->create_table(access_log => "access_log_200901");
+      my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+      $rule->table_name; #=> "access_log_200901"
+      if ( !$rule->is_table_exist ) {
+        $rule->create_table;
+      }
+
+      my $iter = $rule->search({ foo => 'bar' });
 
 DESCRIPTION
     DBIx::Skinny::ProxyTable is

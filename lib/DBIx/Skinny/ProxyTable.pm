@@ -1,8 +1,63 @@
 package DBIx::Skinny::ProxyTable;
-
 use strict;
 use warnings;
 our $VERSION = '0.01';
+use DBIx::Skinny::ProxyTable::Rule;
+
+sub new {
+    my ($class, $skinny) = @_;
+    my $self = { skinny => $skinny };
+    bless $self, __PACKAGE__;
+    return $self;
+}
+
+sub skinny {
+    my $self = $_[0];
+    $self->{skinny};
+}
+
+sub set {
+    my ($self, $from, $to) = @_;
+  
+    my $skinny = $self->skinny;
+    my $schema = $skinny->schema;
+    my $_schema_info = $schema->schema_info;
+    $_schema_info->{$to} = $_schema_info->{$from};
+  
+    my $row_class_map;
+    my $klass;
+    if (ref $self) {
+        $row_class_map = $skinny->{row_class_map};
+        $klass = $skinny->{klass};
+    }
+    else {
+        $row_class_map = $skinny->attribute->{row_class_map};
+        $klass = $skinny;
+    }
+
+    my $tmp_base_row_class = join '::', $klass, 'Row', _camelize($from);
+    eval "use $tmp_base_row_class"; ## no critic
+    if ($@) {
+        $row_class_map->{$to} = 'DBIx::Skinny::Row';
+    } else {
+        $row_class_map->{$to} = $tmp_base_row_class;
+    }
+}
+
+sub _camelize {
+    my $s = shift;
+    join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
+}
+
+sub create_table {
+    my ($self, $from, $to) = @_;
+    $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $from, $to));
+}
+
+sub rule {
+    my ($self, $base, @args) = @_;
+    return DBIx::Skinny::ProxyTable::Rule->new($self, $base, @args);
+}
 
 1;
 __END__
@@ -13,7 +68,32 @@ DBIx::Skinny::ProxyTable -
 
 =head1 SYNOPSIS
 
-  use DBIx::Skinny::ProxyTable;
+  package Proj::DB;
+  use DBIx::Skinny;
+  use DBIx::Skinny::Mixin modules => [qw(ProxyTable)];
+
+  package Proj::DB::Schema;
+  use DBIx::Skinny::Schema;
+  use DBIx::Skinny::Schema::ProxyRule;
+
+  install_table 'access_log' => shcema {
+    proxy_rule 'strftime', 'access_log_%Y%m';
+
+    pk 'id';
+    columns qw/id/;
+  };
+
+  package main;
+
+  Proj::DB->proxy_table->set(access_log => "access_log_200901");
+  Proj::DB->proxy_table->create_table(access_log => "access_log_200901");
+  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  $rule->table_name; #=> "access_log_200901"
+  if ( !$rule->is_table_exist ) {
+    $rule->create_table;
+  }
+
+  my $iter = $rule->search({ foo => 'bar' });
 
 =head1 DESCRIPTION
 

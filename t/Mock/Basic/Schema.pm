@@ -1,4 +1,4 @@
-package Mock::Basic::Scehma;
+package Mock::Basic::Schema;
 use DBIx::Skinny::Schema;
 use DBIx::Skinny::Schema::ProxyRule;
 
