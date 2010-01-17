@@ -10,16 +10,7 @@ ok($skinny->can('proxy_table'), 'proxy_table can call');
 isa_ok($skinny->proxy_table, 'DBIx::Skinny::ProxyTable');
 
 my $table = "access_log_200901";
-
-my $schema = $skinny->search_by_sql(q{
-    SELECT sql FROM
-        ( SELECT * FROM sqlite_master UNION ALL
-        SELECT * FROM sqlite_temp_master)
-    WHERE type != 'meta' and tbl_name = 'access_log'
-    ORDER BY tbl_name, type DESC, name
-})->first->sql;
-$schema =~ s/TABLE access_log \(/TABLE $table (/;
-$skinny->do($schema);
+$skinny->proxy_table->create_table('access_log' => $table);
 
 dies_ok {
     $skinny->search($table, {});
