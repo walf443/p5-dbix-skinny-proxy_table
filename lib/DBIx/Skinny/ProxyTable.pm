@@ -51,7 +51,24 @@ sub _camelize {
 
 sub create_table {
     my ($self, $from, $to) = @_;
-    $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $from, $to));
+    my $dbd = $self->skinny->dbd && ref $self->skinny->dbd;
+    if ( $dbd && $dbd =~ /^DBIx::Skinny::DBD::(.+)$/ ) {
+        $dbd = $1;
+        if ( $dbd eq 'mysql' ) {
+            $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $from, $to));
+        } elsif ( $dbd eq 'SQLite' ) {
+            my $sql = $self->skinny->search_by_sql(q{
+                SELECT sql FROM
+                    ( SELECT * FROM sqlite_master UNION ALL
+                    SELECT * FROM sqlite_temp_master)
+                WHERE type != 'meta' and tbl_name = ?
+            }, [ $from ])->first->sql;
+            $sql =~ s/TABLE $from \(/TABLE IF NOT EXISTS $to (/;
+            $self->skinny->do($sql);
+        } else {
+            die "DBIx::Skinny::DBD::$dbd is not supported";
+        }
+    }
 }
 
 sub rule {
