@@ -40,6 +40,11 @@ sub copy_table {
     $self->{proxy_table}->copy_table($self->{base_table}, $self->table_name);
 }
 
+sub search {
+    my $self = shift;
+    $self->{proxy_table}->{skinny}->search($self->table_name, @_);
+}
+
 sub strftime {
     my ($self, $tmpl, $dt) = @_;
     $dt->strftime($tmpl);
