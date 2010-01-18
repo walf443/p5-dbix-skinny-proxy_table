@@ -11,6 +11,7 @@ sub new {
     };
     bless $self, __PACKAGE__;
     $self->{table_name} = $self->_table_name(@args);
+    $self->{proxy_table}->set($self->{base_table}, $self->table_name);
     return $self;
 }
 
