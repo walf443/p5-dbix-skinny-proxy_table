@@ -23,9 +23,9 @@ sub table_name {
 sub _table_name {
     my ($self, @args) = @_;
 
-    my $rule = $self->{proxy_table}->{skinny}->schema->proxy_rules->{$self->{base_table}};
+    my $rule = $self->{proxy_table}->{skinny}->schema->proxy_table_rules->{$self->{base_table}};
     unless ( $rule ) {
-        Carp::croak("Cant' find proxy_rules for @{[ $self->{base_table} ]}");
+        Carp::croak("Cant' find proxy_table_rules for @{[ $self->{base_table} ]}");
     }
     my ($func, @default_args) = @{$rule};
     $self->$func(@default_args, @args);

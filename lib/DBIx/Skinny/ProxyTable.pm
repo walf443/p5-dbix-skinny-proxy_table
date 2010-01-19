@@ -91,10 +91,10 @@ DBIx::Skinny::ProxyTable -
 
   package Proj::DB::Schema;
   use DBIx::Skinny::Schema;
-  use DBIx::Skinny::Schema::ProxyRule;
+  use DBIx::Skinny::Schema::ProxyTableRule;
 
   install_table 'access_log' => shcema {
-    proxy_rule 'strftime', 'access_log_%Y%m';
+    proxy_table_rule 'strftime', 'access_log_%Y%m';
 
     pk 'id';
     columns qw/id/;
