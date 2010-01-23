@@ -9,7 +9,7 @@ sub new {
         proxy_table => $proxy_table,
         base_table  => $base,
     };
-    bless $self, __PACKAGE__;
+    bless $self, $class;
     $self->{table_name} = $self->_table_name(@args);
     $self->{proxy_table}->set($self->{base_table}, $self->table_name);
     return $self;

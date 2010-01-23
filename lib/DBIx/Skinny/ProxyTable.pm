@@ -7,7 +7,7 @@ use DBIx::Skinny::ProxyTable::Rule;
 sub new {
     my ($class, $skinny) = @_;
     my $self = { skinny => $skinny };
-    bless $self, __PACKAGE__;
+    bless $self, $class;
     return $self;
 }
 
