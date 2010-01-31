@@ -25,5 +25,13 @@ lives_ok {
     $skinny->search($table, {});
 };
 
+dies_ok {
+    $skinny->proxy_table->set('access_log', 'access_log.fuga');
+};
+
+dies_ok {
+    $skinny->proxy_table->set('access_log', 'access_log; fuga');
+};
+
 done_testing();
 

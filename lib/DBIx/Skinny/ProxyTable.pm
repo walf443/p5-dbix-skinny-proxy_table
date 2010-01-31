@@ -3,6 +3,7 @@ use strict;
 use warnings;
 our $VERSION = '0.01';
 use DBIx::Skinny::ProxyTable::Rule;
+use Carp;
 
 sub new {
     my ($class, $skinny) = @_;
@@ -18,6 +19,9 @@ sub skinny {
 
 sub set {
     my ($self, $from, $to) = @_;
+
+    $self->_validate($from);
+    $self->_validate($to);
   
     my $skinny = $self->skinny;
     my $schema = $skinny->schema;
@@ -44,6 +48,14 @@ sub set {
     }
 }
 
+# This method is safety net for creating wrong table name or executing SQL injection.
+sub _validate {
+    my ($self, $str) = @_;
+    if ( $str !~ /^[a-zA-Z0-9_]+$/ ) {
+        Carp::croak("$str should be normal character");
+    }
+}
+
 sub _camelize {
     my $s = shift;
     join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
@@ -51,6 +63,9 @@ sub _camelize {
 
 sub copy_table {
     my ($self, $from, $to) = @_;
+
+    $self->_validate($from);
+    $self->_validate($to);
     my $dbd = $self->skinny->dbd && ref $self->skinny->dbd;
     if ( $dbd && $dbd =~ /^DBIx::Skinny::DBD::(.+)$/ ) {
         $dbd = $1;
