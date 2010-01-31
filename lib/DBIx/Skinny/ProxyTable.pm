@@ -72,12 +72,14 @@ sub copy_table {
         if ( $dbd eq 'mysql' ) {
             $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $from, $to));
         } elsif ( $dbd eq 'SQLite' ) {
-            my $sql = $self->skinny->search_by_sql(q{
+            my $record = $self->skinny->search_by_sql(q{
                 SELECT sql FROM
                     ( SELECT * FROM sqlite_master UNION ALL
                     SELECT * FROM sqlite_temp_master)
                 WHERE type != 'meta' and tbl_name = ?
-            }, [ $from ])->first->sql;
+            }, [ $from ])->first
+                or Carp::croak("Can't find table $from in sqlite_master or sqlite_temp_master");
+            my $sql = $record->sql;
             $sql =~ s/TABLE $from \(/TABLE IF NOT EXISTS $to (/;
             $self->skinny->do($sql);
         } else {

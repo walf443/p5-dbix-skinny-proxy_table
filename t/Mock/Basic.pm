@@ -8,11 +8,20 @@ use DBIx::Skinny setup => +{
 use DBIx::Skinny::Mixin modules => [qw(ProxyTable)];
 
 sub setup_test_db {
-    shift->do(q{
+    my $self = shift;
+    $self->do(q{
         CREATE TABLE access_log (
             id   INT,
             accessed_on  DATE,
             count           INT
+        )
+    });
+    $self->do(q{
+        CREATE TABLE ranking (
+            id   INT,
+            rank INT,
+            count INT,
+            ranked_on DATE
         )
     });
 }

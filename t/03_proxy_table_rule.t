@@ -20,5 +20,12 @@ $skinny->setup_test_db;
     is($rule->table_name, 'access_log_201002', 'strftime ok');
 }
 
+{
+    my $rule = $skinny->proxy_table->rule('ranking', 'daily');
+    $rule->copy_table;
+    is($rule->table_name, 'ranking_daily', 'user defined rule name is ok');
+
+}
+
 done_testing();
 

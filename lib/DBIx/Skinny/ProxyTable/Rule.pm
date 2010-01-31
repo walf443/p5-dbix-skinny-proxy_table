@@ -28,7 +28,11 @@ sub _table_name {
         Carp::croak("Cant' find proxy_table_rules for @{[ $self->{base_table} ]}");
     }
     my ($func, @default_args) = @{$rule};
-    $self->$func(@default_args, @args);
+    if ( ref $func && ref $func eq "CODE" ) {
+        return $func->(@default_args, @args);
+    } else {
+        return $self->$func(@default_args, @args);
+    }
 }
 
 sub is_table_exist {
