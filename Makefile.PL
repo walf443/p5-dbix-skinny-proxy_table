@@ -10,6 +10,7 @@ tests 't/*.t';
 author_tests 'xt';
 
 requires 'DBIx::Skinny';
+requires 'Carp';
 
 build_requires 'Test::More';
 build_requires 'DateTime';
