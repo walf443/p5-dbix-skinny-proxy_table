@@ -73,7 +73,7 @@ If you define rule followings:
 you can call followings:
 
     my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->now);
-    $rule->table_name #=> "access_log_1002"
+    $rule->table_name #=> "access_log_201002"
 
 =head3 sprintf
 
@@ -83,14 +83,14 @@ If you define rule followings:
     use DBIx::Skinny::Schema::ProxyTableRule;
 
     install_table 'access_log' => schema {
-        proxy_table_rule 'sprintf', 'access_log_%02d%02d';
+        proxy_table_rule 'sprintf', 'access_log_%04d%02d';
     };
 
 you can call followings:
 
     my $now = DateTime->now;
     my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
-    $rule->table_name #=> "access_log_1002"
+    $rule->table_name #=> "access_log_201002"
 
 =head3 CODEREF
 
@@ -113,7 +113,7 @@ you can call followings:
 
     my $now = DateTime->now;
     my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
-    $rule->table_name #=> "access_log_1002"
+    $rule->table_name #=> "access_log_201002"
 
 =head1 AUTHOR
 
