@@ -3,6 +3,7 @@ use Test::More;
 use Test::Exception;
 use Mock::Basic;
 use DateTime;
+use Time::Piece;
 
 my $skinny = Mock::Basic->new;
 $skinny->setup_test_db;
@@ -18,6 +19,14 @@ $skinny->setup_test_db;
     $rule->copy_table;
     my $iter = $rule->search({ count => 10 });
     is($rule->table_name, 'access_log_201002', 'strftime ok');
+}
+
+{
+    my $piece = Time::Piece->strptime('2010-01-01', '%Y-%m-%d');
+    my $rule = $skinny->proxy_table->rule('access_log', $piece);
+    $rule->copy_table;
+    my $iter = $rule->search({ count => 10 });
+    is($rule->table_name, 'access_log_201001', 'strftime ok ( with Time::Piece)');
 }
 
 {

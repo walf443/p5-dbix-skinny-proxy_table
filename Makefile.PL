@@ -9,7 +9,11 @@ readme_from 'lib/DBIx/Skinny/ProxyTable.pm';
 tests 't/*.t';
 author_tests 'xt';
 
+requires 'DBIx::Skinny';
+
 build_requires 'Test::More';
+build_requires 'DateTime';
+build_requires 'Time::Piece';
 build_requires 'Test::LoadAllModules';
 build_requires 'Module::Install::ReadmeFromPod';
 use_test_base;
