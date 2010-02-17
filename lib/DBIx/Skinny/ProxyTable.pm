@@ -22,12 +22,12 @@ sub set {
 
     $self->_validate($from);
     $self->_validate($to);
-  
+
     my $skinny = $self->skinny;
     my $schema = $skinny->schema;
     my $_schema_info = $schema->schema_info;
     $_schema_info->{$to} = $_schema_info->{$from};
-  
+
     my $row_class_map;
     my $klass;
     if (ref $self) {
