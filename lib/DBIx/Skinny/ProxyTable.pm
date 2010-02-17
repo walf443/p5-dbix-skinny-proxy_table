@@ -123,9 +123,7 @@ DBIx::Skinny::ProxyTable -
   Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
   my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
   $rule->table_name; #=> "access_log_200901"
-  if ( !$rule->is_table_exist ) {
-    $rule->copy_table;
-  }
+  $rule->copy_table;
 
   my $iter = $rule->search({ foo => 'bar' });
 

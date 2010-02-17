@@ -35,10 +35,6 @@ sub _table_name {
     }
 }
 
-sub is_table_exist {
-    my $self = $_[0];
-}
-
 sub copy_table {
     my $self = $_[0];
     $self->{proxy_table}->copy_table($self->{base_table}, $self->table_name);
