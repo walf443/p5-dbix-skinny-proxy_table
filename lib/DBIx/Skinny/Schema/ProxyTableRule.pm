@@ -19,3 +19,113 @@ sub proxy_table_rule(@) { ## no critic
 }
 
 1;
+__END__
+
+=head1 NAME
+
+DBIx::Skinny::Schema::ProxyTableRule
+
+=head1 SYNOPSIS
+
+  package Proj::DB::Schema;
+  use DBIx::Skinny::Schema;
+  use DBIx::Skinny::Schema::ProxyTableRule;
+
+  install_table 'access_log' => shcema {
+    proxy_table_rule 'strftime', 'access_log_%Y%m';
+
+    pk 'id';
+    columns qw/id/;
+  };
+
+  package main;
+
+  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  $rule->table_name; #=> "access_log_200901"
+
+  # create table that name is "access_log_200901"
+  $rule->copy_table;
+
+  my $iter = $rule->search({ foo => 'bar' });
+
+=head1 DESCRIPTION
+
+DBIx::Skinny::Schema::ProxyTableRule export proxy_table_rule method.
+You can call proxy_table_rule method in install_table method.
+
+=head1 METHOD
+
+=head2 proxy_table_rule($funcname_or_coderef, @default_args)
+
+1st argumet is funtion name (strftime or sprintf) or CODEREF
+
+=head3 strftime
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    install_table 'access_log' => schema {
+        proxy_table_rule 'strftime', 'access_log_%Y%m';
+    };
+
+you can call followings:
+
+    my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->now);
+    $rule->table_name #=> "access_log_1002"
+
+=head3 sprintf
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    install_table 'access_log' => schema {
+        proxy_table_rule 'sprintf', 'access_log_%02d%02d';
+    };
+
+you can call followings:
+
+    my $now = DateTime->now;
+    my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
+    $rule->table_name #=> "access_log_1002"
+
+=head3 CODEREF
+
+You can define custom function.
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    my $code = sub {
+        my ($template, @args) = @_;
+        sprintf($template, @args);
+    };
+    install_table 'access_log' => schema {
+        proxy_table_rule \$code, 'access_log_%02d%02d';
+    };
+
+you can call followings:
+
+    my $now = DateTime->now;
+    my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
+    $rule->table_name #=> "access_log_1002"
+
+=head1 AUTHOR
+
+Keiji Yoshimi E<lt>walf443 at gmail dot comE<gt>
+
+=head1 SEE ALSO
+
++<DBIx::Skinny::ProxyTable>, +<DBIx::Skinny::ProxyTable::Rule>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

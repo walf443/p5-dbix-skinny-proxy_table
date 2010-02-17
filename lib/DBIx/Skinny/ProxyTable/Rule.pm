@@ -56,3 +56,52 @@ sub sprintf {
 }
 
 1;
+__END__
+
+=head1 NAME
+
+DBIx::Skinny::ProxyTable::Rule
+
+=head1 SYNOPSIS
+
+  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  $rule->table_name; #=> "access_log_200901"
+
+  # create table that name is "access_log_200901"
+  $rule->copy_table;
+
+  my $iter = $rule->search({ foo => 'bar' });
+
+=head1 DESCRIPTION
+
+When DBIx::Skinny::ProxyTable::Rule was created,
+it decide table name by rule and set schema information to your project skinny's schema.
+
+You can handle dynamic table by natural interface.
+
+=head1 METHOD
+
+=head2 copy_table
+
+It's just shortcut for
+    Proj::DB->proxy_table->copy_table($rule->{base_table}, $rule->table_name)
+
+=head2 search
+
+It's just shortcut for
+    Proj::DB->search($rule->table_name, $args);
+
+=head1 AUTHOR
+
+Keiji Yoshimi E<lt>walf443 at gmail dot comE<gt>
+
+=head1 SEE ALSO
+
++<DBIx::Skinny::ProxyTable>, +<DBIx::Skinny::Schema::ProxyTableRule>
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

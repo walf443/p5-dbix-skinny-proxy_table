@@ -129,13 +129,36 @@ DBIx::Skinny::ProxyTable -
 
 =head1 DESCRIPTION
 
-DBIx::Skinny::ProxyTable is
+DBIx::Skinny::ProxyTable is DBIx::Skinny::Mixin for partitioning table.
+
+=head1 METHOD
+
+=head2 set($from, $to)
+
+set schema information for table that name is $to based on $from to your project skinny's schema.
+I don't recommend to call this method directly because of distributing naming rule.
+
+see also rule method.
+
+=head2 copy_table($from, $to)
+
+copy table from $from to $to if it $to is not exist.
+SQLite and MySQL only support.
+
+=head2 rule($from, @args)
+
+create DBIx::Skinny::ProxyTable::Rule object.
+@args is followed by your project skinny's schema definition.
+
+see also +<DBIx::Skinny::ProxyTable::Rule>
 
 =head1 AUTHOR
 
 Keiji Yoshimi E<lt>walf443 at gmail dot comE<gt>
 
 =head1 SEE ALSO
+
++<DBIx::Skinny>, +<DBIx::Class::ProxyTable>
 
 =head1 LICENSE
 
