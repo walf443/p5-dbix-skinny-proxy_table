@@ -17,7 +17,6 @@ $skinny->setup_test_db;
     my $dt = DateTime->new(year => 2010, month => 2, day => 1);
     my $rule = $skinny->proxy_table->rule('access_log', $dt);
     $rule->copy_table;
-    my $iter = $rule->search({ count => 10 });
     is($rule->table_name, 'access_log_201002', 'strftime ok');
 }
 
@@ -25,7 +24,6 @@ $skinny->setup_test_db;
     my $piece = Time::Piece->strptime('2010-01-01', '%Y-%m-%d');
     my $rule = $skinny->proxy_table->rule('access_log', $piece);
     $rule->copy_table;
-    my $iter = $rule->search({ count => 10 });
     is($rule->table_name, 'access_log_201001', 'strftime ok ( with Time::Piece)');
 }
 

@@ -46,7 +46,7 @@ DBIx::Skinny::Schema::ProxyTableRule
   # create table that name is "access_log_200901"
   $rule->copy_table;
 
-  my $iter = $rule->search({ foo => 'bar' });
+  my $iter = Proj::DB->search($rule->table_name, { foo => 'bar' });
 
 =head1 DESCRIPTION
 

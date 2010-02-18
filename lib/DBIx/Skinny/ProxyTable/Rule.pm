@@ -40,11 +40,6 @@ sub copy_table {
     $self->{proxy_table}->copy_table($self->{base_table}, $self->table_name);
 }
 
-sub search {
-    my $self = shift;
-    $self->{proxy_table}->{skinny}->search($self->table_name, @_);
-}
-
 sub strftime {
     my ($self, $tmpl, $dt) = @_;
     $dt->strftime($tmpl);
@@ -70,7 +65,7 @@ DBIx::Skinny::ProxyTable::Rule
   # create table that name is "access_log_200901"
   $rule->copy_table;
 
-  my $iter = $rule->search({ foo => 'bar' });
+  my $iter = Proj::DB->search($rule->proxy_table, +{ });
 
 =head1 DESCRIPTION
 
@@ -85,11 +80,6 @@ You can handle dynamic table by natural interface.
 
 It's just shortcut for
     Proj::DB->proxy_table->copy_table($rule->{base_table}, $rule->table_name)
-
-=head2 search
-
-It's just shortcut for
-    Proj::DB->search($rule->table_name, $args);
 
 =head1 AUTHOR
 
