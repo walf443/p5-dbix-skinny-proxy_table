@@ -19,11 +19,14 @@ dies_ok {
 ok(!$skinny->attribute->{row_class_map}->{$table}, 'row class map should not be exist yet');
 $skinny->proxy_table->set('access_log', $table);
 ok($skinny->schema->schema_info->{$table}, 'schema_info should be exist ');
-ok($skinny->attribute->{row_class_map}->{$table}, 'row class map should be exist');
+is($skinny->attribute->{row_class_map}->{$table}, $skinny->attribute->{row_class_map}->{'access_log'}, 'row class map should be exist');
 
 lives_ok {
     $skinny->search($table, {});
 };
+
+my $iter = $skinny->search($table);
+isa_ok($iter, "DBIx::Skinny::Iterator");
 
 dies_ok {
     $skinny->proxy_table->set('access_log', 'access_log.fuga');

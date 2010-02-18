@@ -23,19 +23,37 @@ SYNOPSIS
       Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
       my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
       $rule->table_name; #=> "access_log_200901"
-      if ( !$rule->is_table_exist ) {
-        $rule->copy_table;
-      }
+      $rule->copy_table;
 
       my $iter = $rule->search({ foo => 'bar' });
 
 DESCRIPTION
-    DBIx::Skinny::ProxyTable is
+    DBIx::Skinny::ProxyTable is DBIx::Skinny::Mixin for partitioning table.
+
+METHOD
+  set($from, $to)
+    set schema information for table that name is $to based on $from to your
+    project skinny's schema. I don't recommend to call this method directly
+    because of distributing naming rule.
+
+    see also rule method.
+
+  copy_table($from, $to)
+    copy table from $from to $to if it $to is not exist. SQLite and MySQL
+    only support.
+
+  rule($from, @args)
+    create DBIx::Skinny::ProxyTable::Rule object. @args is followed by your
+    project skinny's schema definition.
+
+    see also +<DBIx::Skinny::ProxyTable::Rule>
 
 AUTHOR
     Keiji Yoshimi <walf443 at gmail dot com>
 
 SEE ALSO
+    +<DBIx::Skinny>, +<DBIx::Class::ProxyTable>
+
 LICENSE
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.

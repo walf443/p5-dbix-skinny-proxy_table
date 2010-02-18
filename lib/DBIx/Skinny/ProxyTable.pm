@@ -22,14 +22,14 @@ sub set {
 
     $self->_validate($from);
     $self->_validate($to);
-  
+
     my $skinny = $self->skinny;
     my $schema = $skinny->schema;
     my $_schema_info = $schema->schema_info;
     $_schema_info->{$to} = $_schema_info->{$from};
-  
-    my $row_class_map;
+
     my $klass;
+    my $row_class_map;
     if (ref $self) {
         $row_class_map = $skinny->{row_class_map};
         $klass = $skinny->{klass};
@@ -39,13 +39,13 @@ sub set {
         $klass = $skinny;
     }
 
-    my $tmp_base_row_class = join '::', $klass, 'Row', _camelize($from);
-    eval "use $tmp_base_row_class"; ## no critic
-    if ($@) {
-        $row_class_map->{$to} = 'DBIx::Skinny::Row';
-    } else {
-        $row_class_map->{$to} = $tmp_base_row_class;
+    # まず元テーブルのrow_class_mapが存在していないかもなので決定させる
+    unless ($row_class_map->{$from}) {
+        $skinny->_mk_row_class('', $from);
     }
+    $row_class_map->{$to} = $row_class_map->{$from};
+
+    $self;
 }
 
 # This method is safety net for creating wrong table name or executing SQL injection.
@@ -54,11 +54,6 @@ sub _validate {
     if ( $str !~ /^[a-zA-Z0-9_]+$/ ) {
         Carp::croak("$str should be normal character");
     }
-}
-
-sub _camelize {
-    my $s = shift;
-    join('', map{ ucfirst $_ } split(/(?<=[A-Za-z])_(?=[A-Za-z])|\b/, $s));
 }
 
 sub copy_table {
@@ -123,21 +118,42 @@ DBIx::Skinny::ProxyTable -
   Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
   my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
   $rule->table_name; #=> "access_log_200901"
-  if ( !$rule->is_table_exist ) {
-    $rule->copy_table;
-  }
+  $rule->copy_table;
 
   my $iter = $rule->search({ foo => 'bar' });
 
 =head1 DESCRIPTION
 
-DBIx::Skinny::ProxyTable is
+DBIx::Skinny::ProxyTable is DBIx::Skinny::Mixin for partitioning table.
+
+=head1 METHOD
+
+=head2 set($from, $to)
+
+set schema information for table that name is $to based on $from to your project skinny's schema.
+I don't recommend to call this method directly because of distributing naming rule.
+
+see also rule method.
+
+=head2 copy_table($from, $to)
+
+copy table from $from to $to if it $to is not exist.
+SQLite and MySQL only support.
+
+=head2 rule($from, @args)
+
+create DBIx::Skinny::ProxyTable::Rule object.
+@args is followed by your project skinny's schema definition.
+
+see also +<DBIx::Skinny::ProxyTable::Rule>
 
 =head1 AUTHOR
 
 Keiji Yoshimi E<lt>walf443 at gmail dot comE<gt>
 
 =head1 SEE ALSO
+
++<DBIx::Skinny>, +<DBIx::Class::ProxyTable>
 
 =head1 LICENSE
 
