@@ -70,7 +70,7 @@ sub copy_table {
     if ( $dbd && $dbd =~ /^DBIx::Skinny::DBD::(.+)$/ ) {
         $dbd = $1;
         if ( $dbd eq 'mysql' ) {
-            $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $from, $to));
+            $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $to, $from));
         } elsif ( $dbd eq 'SQLite' ) {
             my $record = $self->skinny->search_by_sql(q{
                 SELECT sql FROM
