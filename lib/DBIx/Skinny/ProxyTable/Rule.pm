@@ -47,7 +47,7 @@ sub strftime {
 
 sub sprintf {
     my ($self, $tmpl, @args) = @_;
-    sprintf($tmpl, @args);
+    CORE::sprintf($tmpl, @args);
 }
 
 1;
