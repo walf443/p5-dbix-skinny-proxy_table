@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::ProxyTable
 
+0.03    Sat Feb 20 02:05:44 JST 2010
+        - fixed bug: not work sprintf (nekokak++)
+
 0.02    Thu Feb 18 22:20:07 JST 2010
         - fixed bug: copy_table for mysql is broken.
         - romeve search method
