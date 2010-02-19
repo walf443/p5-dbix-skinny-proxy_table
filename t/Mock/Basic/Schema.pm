@@ -13,6 +13,17 @@ install_table 'access_log' => schema {
     /;
 };
 
+install_table 'error_log' => schema {
+    proxy_table_rule 'sprintf', 'error_log_%s';
+
+    pk 'id';
+    columns qw/
+        id
+        errored_on
+        count
+    /;
+};
+
 sub ranking_rule {
     my ($base, $type,) = @_;
     if ( $type !~ /^(daily|weekly|monthly)$/ ) {
