@@ -1,6 +1,11 @@
 use lib './t';
 use Test::More;
 use Test::Exception;
+BEGIN {
+    eval "use DBD::SQLite";
+    plan skip_all => "DBD::SQLite is not installed. skip testing" if $@;
+}
+
 use Mock::Basic;
 
 my $skinny = Mock::Basic->new;
