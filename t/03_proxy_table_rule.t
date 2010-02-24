@@ -19,6 +19,12 @@ subtest 'user defined rule' => sub {
     done_testing();
 };
 
+subtest 'sprintf rule' => sub {
+    my $rule = $skinny->proxy_table->rule('error_log', '20100101');
+    is($rule->table_name, 'error_log_20100101', 'sprintf ok');
+    done_testing();
+};
+
 subtest 'strftime with DateTime' => sub {
     eval "use DateTime";
     plan skip_all => 'this test require DateTime' if $@;
@@ -43,12 +49,6 @@ subtest 'strftime with Time::Piece' => sub {
     my $rule = $skinny->proxy_table->rule('access_log', $piece);
     $rule->copy_table;
     is($rule->table_name, 'access_log_201001', 'strftime ok ( with Time::Piece)');
-    done_testing();
-};
-
-subtest 'sprintf rule' => sub {
-    my $rule = $skinny->proxy_table->rule('error_log', '20100101');
-    is($rule->table_name, 'error_log_20100101', 'sprintf ok');
     done_testing();
 };
 
