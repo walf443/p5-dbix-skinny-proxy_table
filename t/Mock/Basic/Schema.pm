@@ -24,6 +24,17 @@ install_table 'error_log' => schema {
     /;
 };
 
+install_table 'hogehoge_log' => schema {
+    proxy_table_rule 'named_strftime', 'hogehoge_log_%Y%m', 'hogehoged_on';
+
+    pk 'id';
+    columns qw/
+        id
+        hogehoged_on
+        count
+    /;
+};
+
 sub ranking_rule {
     my ($base, $type,) = @_;
     if ( $type !~ /^(daily|weekly|monthly)$/ ) {

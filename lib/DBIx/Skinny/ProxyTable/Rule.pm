@@ -45,6 +45,15 @@ sub strftime {
     $dt->strftime($tmpl);
 }
 
+sub named_strftime {
+    my ($self, $tmpl, $key, %args) = @_;
+    if ( $args{$key} ) {
+        return $args{$key}->strftime($tmpl);
+    } else {
+        Carp::croak("can't find key $key for argument");
+    }
+}
+
 sub sprintf {
     my ($self, $tmpl, @args) = @_;
     CORE::sprintf($tmpl, @args);

@@ -75,6 +75,25 @@ you can call followings:
     my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->now);
     $rule->table_name #=> "access_log_201002"
 
+I recommend to use named_strftime, than this. If you make mistake to send rule to not accessed_on but created_on,
+it may cause some problem.
+
+=head3 named_strftime
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    install_table 'access_log' => schema {
+        proxy_table_rule 'named_strftime', 'access_log_%Y%m', 'accessed_on';
+    };
+
+you can call followings:
+
+    my $rule = Proj::DB->proxy_table->rule('access_log', accessed_on => DateTime->now);
+    $rule->table_name #=> "access_log_201002"
+
 =head3 sprintf
 
 If you define rule followings:
