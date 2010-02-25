@@ -111,6 +111,9 @@ you can call followings:
     my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
     $rule->table_name #=> "access_log_201002"
 
+I recommend to use keyword, than this. If you make mistake to specify argument order,
+it may cause some problem.
+
 =head3 keyword
 
 If you define rule followings:
@@ -119,10 +122,7 @@ If you define rule followings:
     use DBIx::Skinny::Schema::ProxyTableRule;
 
     install_table 'access_log' => schema {
-        proxy_table_rule('keyword', 'access_log_<year><month>', +{
-            year => { regex => qr/(\d{4})/ },
-            month => { regex => qr/(\d{2})/ },
-        });
+        proxy_table_rule 'keyword', 'access_log_<%04d:year><%02d:month>';
     };
 
 you can call followings:
@@ -131,7 +131,7 @@ you can call followings:
     my $rule = Proj::DB->proxy_table->rule('access_log', year => $now->year, month => $now->month);
     $rule->table_name #=> "access_log_201002"
 
-3rd argument is Params::Validate's rule. If you want not to use Params::Validate, send undef.
+second argument's format is like <sprintf_format:keyword_key>. Each keywords are replaced by CORE::sprintf.
 
 =head3 CODEREF
 

@@ -36,14 +36,7 @@ install_table 'hogehoge_log' => schema {
 };
 
 install_table 'fugafuga_log' => schema {
-    proxy_table_rule('keyword', 'fugafuga_log_<year><month>', +{
-        year => +{
-            regex => qr/^(\d{4})$/,
-        },
-        month => +{
-            regex => qr/^(\d{2})$/,
-        },
-    });
+    proxy_table_rule('keyword', 'fugafuga_log_<%04d:year><%02d:month>');
 
     pk 'id';
     columns qw/

@@ -26,10 +26,7 @@ subtest 'sprintf rule' => sub {
 };
 
 subtest 'keyword rule' => sub {
-    eval "use Params::Validate";
-    plan skip_all => 'this test require Params::Validate' if $@;
-
-    my $rule = $skinny->proxy_table->rule('fugafuga_log', year => '2010', month => '01');
+    my $rule = $skinny->proxy_table->rule('fugafuga_log', year => 2010, month => 1);
     is($rule->table_name, 'fugafuga_log_201001', 'keyword ok');
     done_testing();
 };
