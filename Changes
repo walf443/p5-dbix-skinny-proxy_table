@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::ProxyTable
 
+0.05    Fri Feb 26 06:31:42 JST 2010
+        - added rule: named_strftime, keyword
+
 0.04    Mon Feb 22 08:05:17 JST 2010
         - fixed test for failing when DBD::SQLite is not installed.
         - use Module::Install::Repository.
