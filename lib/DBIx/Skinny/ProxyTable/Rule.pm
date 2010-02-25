@@ -79,13 +79,13 @@ DBIx::Skinny::ProxyTable::Rule
 
 =head1 SYNOPSIS
 
-  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  my $rule = Proj::DB->proxy_table->rule('access_log', accessed_on => DateTime->today);
   $rule->table_name; #=> "access_log_200901"
 
   # create table that name is "access_log_200901"
   $rule->copy_table;
 
-  my $iter = Proj::DB->search($rule->proxy_table, +{ });
+  my $iter = Proj::DB->search($rule->table_name, +{ });
 
 =head1 DESCRIPTION
 

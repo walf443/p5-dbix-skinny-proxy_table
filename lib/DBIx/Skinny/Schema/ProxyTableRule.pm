@@ -32,7 +32,7 @@ DBIx::Skinny::Schema::ProxyTableRule
   use DBIx::Skinny::Schema::ProxyTableRule;
 
   install_table 'access_log' => shcema {
-    proxy_table_rule 'strftime', 'access_log_%Y%m';
+    proxy_table_rule 'named_strftime', 'access_log_%Y%m', 'accessed_on';
 
     pk 'id';
     columns qw/id/;
@@ -40,7 +40,7 @@ DBIx::Skinny::Schema::ProxyTableRule
 
   package main;
 
-  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  my $rule = Proj::DB->proxy_table->rule('access_log', accessed_on => DateTime->today);
   $rule->table_name; #=> "access_log_200901"
 
   # create table that name is "access_log_200901"
@@ -59,25 +59,6 @@ You can call proxy_table_rule method in install_table method.
 
 1st argumet is funtion name (strftime or sprintf) or CODEREF
 
-=head3 strftime
-
-If you define rule followings:
-    package Proj::DB::Schema;
-    use DBIx::Skinny::Schema;
-    use DBIx::Skinny::Schema::ProxyTableRule;
-
-    install_table 'access_log' => schema {
-        proxy_table_rule 'strftime', 'access_log_%Y%m';
-    };
-
-you can call followings:
-
-    my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->now);
-    $rule->table_name #=> "access_log_201002"
-
-I recommend to use named_strftime, than this. If you make mistake to send rule to not accessed_on but created_on,
-it may cause some problem.
-
 =head3 named_strftime
 
 If you define rule followings:
@@ -93,6 +74,25 @@ you can call followings:
 
     my $rule = Proj::DB->proxy_table->rule('access_log', accessed_on => DateTime->now);
     $rule->table_name #=> "access_log_201002"
+
+=head3 keyword
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    install_table 'access_log' => schema {
+        proxy_table_rule 'keyword', 'access_log_<%04d:year><%02d:month>';
+    };
+
+you can call followings:
+
+    my $now = DateTime->now;
+    my $rule = Proj::DB->proxy_table->rule('access_log', year => $now->year, month => $now->month);
+    $rule->table_name #=> "access_log_201002"
+
+second argument's format is like <sprintf_format:keyword_key>. Each keywords are replaced by CORE::sprintf.
 
 =head3 sprintf
 
@@ -114,7 +114,7 @@ you can call followings:
 I recommend to use keyword, than this. If you make mistake to specify argument order,
 it may cause some problem.
 
-=head3 keyword
+=head3 strftime
 
 If you define rule followings:
     package Proj::DB::Schema;
@@ -122,16 +122,16 @@ If you define rule followings:
     use DBIx::Skinny::Schema::ProxyTableRule;
 
     install_table 'access_log' => schema {
-        proxy_table_rule 'keyword', 'access_log_<%04d:year><%02d:month>';
+        proxy_table_rule 'strftime', 'access_log_%Y%m';
     };
 
 you can call followings:
 
-    my $now = DateTime->now;
-    my $rule = Proj::DB->proxy_table->rule('access_log', year => $now->year, month => $now->month);
+    my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->now);
     $rule->table_name #=> "access_log_201002"
 
-second argument's format is like <sprintf_format:keyword_key>. Each keywords are replaced by CORE::sprintf.
+I recommend to use named_strftime, than this. If you make mistake to send rule to not accessed_on but created_on,
+it may cause some problem.
 
 =head3 CODEREF
 

@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-DBIx::Skinny::ProxyTable -
+DBIx::Skinny::ProxyTable - handling dynamic table for DBIx::Skinny
 
 =head1 SYNOPSIS
 
@@ -106,7 +106,7 @@ DBIx::Skinny::ProxyTable -
   use DBIx::Skinny::Schema::ProxyTableRule;
 
   install_table 'access_log' => shcema {
-    proxy_table_rule 'strftime', 'access_log_%Y%m';
+    proxy_table_rule 'named_strftime', 'access_log_%Y%m', 'accessed_on';
 
     pk 'id';
     columns qw/id/;
@@ -114,13 +114,15 @@ DBIx::Skinny::ProxyTable -
 
   package main;
 
-  Proj::DB->proxy_table->set(access_log => "access_log_200901");
-  Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
-  my $rule = Proj::DB->proxy_table->rule('access_log', DateTime->today);
+  my $rule = Proj::DB->proxy_table->rule('access_log', accessed_on => DateTime->today);
   $rule->table_name; #=> "access_log_200901"
   $rule->copy_table;
 
   my $iter = Proj::DB->search($rule->table_name, { foo => 'bar' });
+
+  # or you can call manually. ( NOT RECOMMEND )
+  Proj::DB->proxy_table->set(access_log => "access_log_200901");
+  Proj::DB->proxy_table->copy_table(access_log => "access_log_200901");
 
 =head1 DESCRIPTION
 
