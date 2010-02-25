@@ -35,6 +35,24 @@ install_table 'hogehoge_log' => schema {
     /;
 };
 
+install_table 'fugafuga_log' => schema {
+    proxy_table_rule('keyword', 'fugafuga_log_<year><month>', +{
+        year => +{
+            regex => qr/^(\d{4})$/,
+        },
+        month => +{
+            regex => qr/^(\d{2})$/,
+        },
+    });
+
+    pk 'id';
+    columns qw/
+        id
+        hogehoged_on
+        count
+    /;
+};
+
 sub ranking_rule {
     my ($base, $type,) = @_;
     if ( $type !~ /^(daily|weekly|monthly)$/ ) {

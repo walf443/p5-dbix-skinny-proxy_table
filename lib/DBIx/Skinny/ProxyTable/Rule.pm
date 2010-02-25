@@ -59,6 +59,21 @@ sub sprintf {
     CORE::sprintf($tmpl, @args);
 }
 
+sub keyword {
+    my ($self, $tmpl, $validate_rule, %args) = @_;
+
+    if ( $validate_rule ) {
+        eval { use Params::Validate };
+        my @args = map { $_, $args{$_} } keys %args;
+        Params::Validate::validate(@args, $validate_rule);
+    }
+    my $result = $tmpl;
+    for my $key ( keys %args ) {
+        $result =~ s/<$key>/$args{$key}/g;
+    }
+    return $result;
+}
+
 1;
 __END__
 

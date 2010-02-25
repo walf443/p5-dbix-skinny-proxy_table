@@ -15,7 +15,7 @@ use DBIx::Skinny::Mixin modules => [qw(ProxyTable)];
 
 sub setup_test_db {
     my $self = shift;
-    for my $table ( qw/ access_log access_log_201001 access_log_201002 error_log error_log_20100101 hogehoge_log ranking ranking_daily/ ) {
+    for my $table ( qw/ access_log access_log_201001 access_log_201002 error_log error_log_20100101 hogehoge_log fugafuga_log ranking ranking_daily/ ) {
         $self->do(sprintf(q{
             DROP TABLE IF EXISTS %s;
         }, $table));
@@ -38,6 +38,13 @@ sub setup_test_db {
         CREATE TABLE hogehoge_log (
             id   INT,
             hogehoged_on  DATE,
+            count           INT
+        )
+    });
+    $self->do(q{
+        CREATE TABLE fugafuga_log (
+            id   INT,
+            fugafuga_log  DATE,
             count           INT
         )
     });

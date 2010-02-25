@@ -111,6 +111,28 @@ you can call followings:
     my $rule = Proj::DB->proxy_table->rule('access_log', $now->year, $now->month);
     $rule->table_name #=> "access_log_201002"
 
+=head3 keyword
+
+If you define rule followings:
+    package Proj::DB::Schema;
+    use DBIx::Skinny::Schema;
+    use DBIx::Skinny::Schema::ProxyTableRule;
+
+    install_table 'access_log' => schema {
+        proxy_table_rule('keyword', 'access_log_<year><month>', +{
+            year => { regex => qr/(\d{4})/ },
+            month => { regex => qr/(\d{2})/ },
+        });
+    };
+
+you can call followings:
+
+    my $now = DateTime->now;
+    my $rule = Proj::DB->proxy_table->rule('access_log', year => $now->year, month => $now->month);
+    $rule->table_name #=> "access_log_201002"
+
+3rd argument is Params::Validate's rule. If you want not to use Params::Validate, send undef.
+
 =head3 CODEREF
 
 You can define custom function.
