@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::ProxyTable
 
+0.06    Wed Apr 14 23:56:36 JST 2010
+        - fixed bug that many proxy_table instance cannot exist in a process. ( thanks nekokak )
+
 0.05    Fri Feb 26 06:31:42 JST 2010
         - added rule: named_strftime, keyword
 
