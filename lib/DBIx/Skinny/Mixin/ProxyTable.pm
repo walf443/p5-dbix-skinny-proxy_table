@@ -11,7 +11,7 @@ sub register_method {
 
 sub proxy_table {
     my $self = shift;
-    $self->{_cache_proxy_table} ||= DBIx::Skinny::ProxyTable->new($self);
+    DBIx::Skinny::ProxyTable->new($self);
 }
 
 1;
