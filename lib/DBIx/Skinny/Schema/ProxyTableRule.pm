@@ -162,7 +162,7 @@ Keiji Yoshimi E<lt>walf443 at gmail dot comE<gt>
 
 =head1 SEE ALSO
 
-+<DBIx::Skinny::ProxyTable>, +<DBIx::Skinny::ProxyTable::Rule>
+L<DBIx::Skinny::ProxyTable>, L<DBIx::Skinny::ProxyTable::Rule>
 
 =head1 LICENSE
 
