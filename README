@@ -48,13 +48,13 @@ METHOD
     create DBIx::Skinny::ProxyTable::Rule object. @args is followed by your
     project skinny's schema definition.
 
-    see also +<DBIx::Skinny::ProxyTable::Rule>
+    see also DBIx::Skinny::ProxyTable::Rule
 
 AUTHOR
     Keiji Yoshimi <walf443 at gmail dot com>
 
 SEE ALSO
-    +<DBIx::Skinny>, +<DBIx::Class::ProxyTable>
+    DBIx::Skinny, DBIx::Class::ProxyTable
 
 LICENSE
     This library is free software; you can redistribute it and/or modify it
