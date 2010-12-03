@@ -9,7 +9,7 @@ readme_from 'lib/DBIx/Skinny/ProxyTable.pm';
 tests 't/*.t';
 author_tests 'xt';
 
-requires 'DBIx::Skinny';
+requires 'DBIx::Skinny', 0.0729;
 requires 'Carp';
 
 build_requires 'Test::More';
