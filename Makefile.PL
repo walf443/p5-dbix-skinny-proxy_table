@@ -12,7 +12,8 @@ author_tests 'xt';
 requires 'DBIx::Skinny', 0.0729;
 requires 'Carp';
 
-build_requires 'Test::More';
+build_requires 'Test::More', 0.88;
+build_requires 'Test::Exception';
 build_requires 'Test::LoadAllModules';
 build_requires 'Module::Install::ReadmeFromPod';
 auto_include;
