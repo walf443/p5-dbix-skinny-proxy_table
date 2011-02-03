@@ -4,6 +4,7 @@ use warnings;
 our $VERSION = '0.08';
 use DBIx::Skinny::ProxyTable::Rule;
 use Carp;
+use DBIx::Skinny::Util qw();
 
 sub new {
     my ($class, $skinny) = @_;
@@ -28,23 +29,6 @@ sub set {
     my $_schema_info = $schema->schema_info;
     $_schema_info->{$to} = $_schema_info->{$from};
 
-    my $klass;
-    my $row_class_map;
-    if (ref $self) {
-        $row_class_map = $skinny->{row_class_map};
-        $klass = $skinny->{klass};
-    }
-    else {
-        $row_class_map = $skinny->attribute->{row_class_map};
-        $klass = $skinny;
-    }
-
-    # まず元テーブルのrow_class_mapが存在していないかもなので決定させる
-    unless ($row_class_map->{$from}) {
-        $skinny->_mk_row_class('', $from);
-    }
-    $row_class_map->{$to} = $row_class_map->{$from};
-
     $self;
 }
 
@@ -65,18 +49,18 @@ sub copy_table {
     if ( $dbd && $dbd =~ /^DBIx::Skinny::DBD::(.+)$/ ) {
         $dbd = $1;
         if ( $dbd eq 'mysql' ) {
-            $self->skinny->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $to, $from));
+            $self->skinny->dbh->do(sprintf(q{ CREATE TABLE IF NOT EXISTS %s LIKE %s }, $to, $from));
         } elsif ( $dbd eq 'SQLite' ) {
-            my $record = $self->skinny->search_by_sql(q{
+            my $record = $self->skinny->dbh->selectcol_arrayref(q{
                 SELECT sql FROM
                     ( SELECT * FROM sqlite_master UNION ALL
                     SELECT * FROM sqlite_temp_master)
                 WHERE type != 'meta' and tbl_name = ?
-            }, [ $from ])->first
+            }, {}, $from)->[0]
                 or Carp::croak("Can't find table $from in sqlite_master or sqlite_temp_master");
-            my $sql = $record->sql;
+            my $sql = $record;
             $sql =~ s/TABLE $from \(/TABLE IF NOT EXISTS $to (/;
-            $self->skinny->do($sql);
+            $self->skinny->dbh->do($sql);
         } else {
             die "DBIx::Skinny::DBD::$dbd is not supported";
         }

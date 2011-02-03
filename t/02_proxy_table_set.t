@@ -22,10 +22,9 @@ dies_ok {
     $skinny->search($table, {});
 };
 
-ok(!$skinny->_attributes->{row_class_map}->{$table}, 'row class map should not be exist yet');
 $skinny->proxy_table->set('access_log', $table);
 ok($skinny->schema->schema_info->{$table}, 'schema_info should be exist ');
-is($skinny->_attributes->{row_class_map}->{$table}, $skinny->_attributes->{row_class_map}->{'access_log'}, 'row class map should be exist');
+is($skinny->schema->schema_info->{$table}, $skinny->schema->schema_info->{'access_log'}, 'row class map should be exist');
 
 lives_ok {
     $skinny->search($table, {});
