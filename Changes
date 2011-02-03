@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::ProxyTable
 
+0.09    Thu Feb  3 23:47:28 JST 2011
+        - follow DBIx::Skinny 0.0732
+
 0.08    Tue Dec 21 08:33:32 JST 2010
         - minor fix: test dependencies.
 

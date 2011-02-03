@@ -1,7 +1,7 @@
 package DBIx::Skinny::ProxyTable;
 use strict;
 use warnings;
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 use DBIx::Skinny::ProxyTable::Rule;
 use Carp;
 use DBIx::Skinny::Util qw();
